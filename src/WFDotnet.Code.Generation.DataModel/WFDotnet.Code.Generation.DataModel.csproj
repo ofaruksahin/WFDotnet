@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WFDotnet.Code.DataModel\WFDotnet.Code.DataModel.csproj" />
+    <ProjectReference Include="..\WFDotnet.Code.Generation.Common\WFDotnet.Code.Generation.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Extensions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+</Project>

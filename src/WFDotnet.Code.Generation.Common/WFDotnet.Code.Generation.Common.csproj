@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Models\" />
+    <None Remove="Constants\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Constants\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WFDotnet.Code.Common\WFDotnet.Code.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.7.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.7.0" />
+  </ItemGroup>
+</Project>

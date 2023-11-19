@@ -51,7 +51,7 @@ namespace WFDotnet.Code.Generation.DataModel
 
                 return WFCodeGenerationResult.Success(root.NormalizeWhitespace().ToFullString());
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return WFCodeGenerationResult.Fail(ex.Message);
             }
@@ -59,7 +59,7 @@ namespace WFDotnet.Code.Generation.DataModel
 
         private PropertyDeclarationSyntax GenerateNotGenericPredifinedTypeCode(ModelPropertyInfo modelPropertyInfo)
         {
-           var propertySyntax = SyntaxFactory.PropertyDeclaration(SyntaxFactory.ParseTypeName(modelPropertyInfo.Type.GetFullName(false)),modelPropertyInfo.Name);
+            var propertySyntax = SyntaxFactory.PropertyDeclaration(SyntaxFactory.ParseTypeName(modelPropertyInfo.Type.GetFullName(false)), modelPropertyInfo.Name);
             propertySyntax = propertySyntax.AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
             propertySyntax = propertySyntax.WithAccessorList(SyntaxFactory.AccessorList(
                     SyntaxFactory.List(new AccessorDeclarationSyntax[]
@@ -158,7 +158,7 @@ namespace WFDotnet.Code.Generation.DataModel
                     var syntax = SyntaxFactory.SingletonSeparatedList<TypeSyntax>(SyntaxFactory.GenericName(SyntaxFactory.Identifier(genericArgumentName))
                         .WithTypeArgumentList(SyntaxFactory.TypeArgumentList(
                             SyntaxFactory.SeparatedList<TypeSyntax>(GetSyntaxNodeOrTokens(genericArgument)))));
-                    
+
                     syntaxNodeOrTokens.Add(syntax.FirstOrDefault().SyntaxTree.GetRoot());
                 }
                 else

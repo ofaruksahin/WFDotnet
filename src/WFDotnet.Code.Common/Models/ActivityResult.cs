@@ -1,7 +1,7 @@
 ﻿namespace WFDotnet.Code.Common.Models
 {
-	public class ActivityResult
-	{
-	}
+    public class ActivityResult
+    {
+    }
 }
 

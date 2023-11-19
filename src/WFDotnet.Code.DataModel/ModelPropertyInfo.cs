@@ -2,26 +2,26 @@
 
 namespace WFDotnet.Code.DataModel
 {
-	public class ModelPropertyInfo
-	{
-		public string Name { get; set; }
-		public Type Type { get; set; }
+    public class ModelPropertyInfo
+    {
+        public string Name { get; set; }
+        public Type Type { get; set; }
 
-		public bool CanBeInstantiated()
-		{
-			if (Type is null)
-				throw new DataModelTypeIsNotDefinedException(Name ?? nameof(ModelPropertyInfo));
+        public bool CanBeInstantiated()
+        {
+            if (Type is null)
+                throw new DataModelTypeIsNotDefinedException(Name ?? nameof(ModelPropertyInfo));
 
-			return !Type.IsAbstract && !Type.IsValueType && Type.GetConstructor(Type.EmptyTypes) != null;
-		}
+            return !Type.IsAbstract && !Type.IsValueType && Type.GetConstructor(Type.EmptyTypes) != null;
+        }
 
-		public bool HasGenericType()
-		{
-			if (Type is null)
-				throw new DataModelTypeIsNotDefinedException(Name ?? nameof(ModelPropertyInfo));
+        public bool HasGenericType()
+        {
+            if (Type is null)
+                throw new DataModelTypeIsNotDefinedException(Name ?? nameof(ModelPropertyInfo));
 
-			return Type.IsGenericType;
-		}
-	}
+            return Type.IsGenericType;
+        }
+    }
 }
 

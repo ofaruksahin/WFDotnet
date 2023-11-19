@@ -1,7 +1,7 @@
 ﻿namespace WFDotnet.Code.Common.Abstractions
 {
-	public interface IActivity
-	{
-	}
+    public interface IActivity
+    {
+    }
 }
 

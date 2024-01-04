@@ -6,6 +6,12 @@ namespace WFDotnet.Code.DataModel
     {
         public string Name { get; set; }
         public Type Type { get; set; }
+        public List<ModelPropertyAttributeInfo> Attributes { get; set; }
+
+        public ModelPropertyInfo()
+        {
+            Attributes = new List<ModelPropertyAttributeInfo>();
+        }
 
         public bool CanBeInstantiated()
         {

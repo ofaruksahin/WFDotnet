@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
@@ -23,6 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\WFDotnet.Code.Activity.Basic\WFDotnet.Code.Activity.Basic.csproj" />
+    <ProjectReference Include="..\..\src\WFDotnet.Code.Activity.Common\WFDotnet.Code.Activity.Common.csproj" />
+    <ProjectReference Include="..\..\src\WFDotnet.Code.Generation.Activity\WFDotnet.Code.Generation.Activity.csproj" />
     <ProjectReference Include="..\..\src\WFDotnet.Code.Generation.DataModel\WFDotnet.Code.Generation.DataModel.csproj" />
   </ItemGroup>
 </Project>

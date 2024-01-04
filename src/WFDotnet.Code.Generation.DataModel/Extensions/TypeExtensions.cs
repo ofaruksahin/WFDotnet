@@ -8,6 +8,11 @@
             var genericPropertyCommaIndex = type.FullName.IndexOf('`');
             return type.FullName.Substring(0, genericPropertyCommaIndex);
         }
+
+        public static bool IsAttribute(this Type type)
+        {
+            return type.IsSubclassOf(typeof(Attribute));
+        }
     }
 }
 

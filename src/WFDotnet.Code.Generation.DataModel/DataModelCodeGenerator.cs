@@ -1,6 +1,8 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using WFDotnet.Code.Common.Constants;
 using WFDotnet.Code.DataModel;
 using WFDotnet.Code.Generation.Common;
@@ -33,7 +35,6 @@ namespace WFDotnet.Code.Generation.DataModel
 
                     if (!defaultUsings.Any(f => f == propertyNamespace))
                         defaultUsings.Add(propertyNamespace);
-
                 }
 
 
@@ -70,6 +71,9 @@ namespace WFDotnet.Code.Generation.DataModel
                             .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))
                     })
                 ));
+
+            propertySyntax = PropertySyntaxAddAttributes(propertySyntax, modelPropertyInfo);
+
             return propertySyntax;
         }
 
@@ -128,6 +132,8 @@ namespace WFDotnet.Code.Generation.DataModel
                    )
                ).WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken));
 
+            property = PropertySyntaxAddAttributes(property, modelPropertyInfo);
+
             return property;
         }
 
@@ -170,6 +176,67 @@ namespace WFDotnet.Code.Generation.DataModel
             }
 
             return syntaxNodeOrTokens;
+        }
+
+        private PropertyDeclarationSyntax PropertySyntaxAddAttributes(PropertyDeclarationSyntax propertyDeclarationSyntax, ModelPropertyInfo modelPropertyInfo)
+        {
+            if (!modelPropertyInfo.Attributes.Any()) return propertyDeclarationSyntax;
+
+            List<AttributeSyntax> attributeSyntaxes = new List<AttributeSyntax>();
+
+            foreach (var attributeInfo in modelPropertyInfo.Attributes)
+            {
+                bool hasAttributeProperties = false;
+                string argumentAttributeText = "";
+
+                if (attributeInfo.Value != null)
+                {
+                    var attributeProperties = attributeInfo.Value.GetType().GetProperties();
+
+                    foreach (var attributeProperty in attributeProperties)
+                    {
+                        if (!hasAttributeProperties)
+                        {
+                            hasAttributeProperties = true;
+                            argumentAttributeText += SyntaxFactory.Token(SyntaxKind.OpenParenToken).Text;
+                        }
+
+                        var attrValue = attributeProperty.GetValue(attributeInfo.Value);
+
+                        if (attributeProperty.PropertyType == typeof(string))
+                            argumentAttributeText += $"{attributeProperty.Name} = \"{attrValue}\" ,";
+                        else if(attributeProperty.PropertyType.IsEnum)
+                            argumentAttributeText += $"{attributeProperty.Name} = {attributeProperty.Name}.{attrValue} ,";
+                        else
+                            argumentAttributeText += $"{attributeProperty.Name} = {attrValue} ,";
+                    }
+
+                    argumentAttributeText = argumentAttributeText.TrimEnd(SyntaxFactory.Token(SyntaxKind.CommaToken).Text[0]);
+                    argumentAttributeText += SyntaxFactory.Token(SyntaxKind.CloseParenToken).Text;
+                }
+
+                AttributeSyntax attributeSyntax = null;
+
+                if (!hasAttributeProperties)
+                {
+                    attributeSyntax = SyntaxFactory.Attribute(SyntaxFactory.ParseName(attributeInfo.Type.FullName));
+                }
+                else
+                {
+                    attributeSyntax = SyntaxFactory.Attribute(
+                        SyntaxFactory.ParseName(attributeInfo.Type.FullName),
+                        SyntaxFactory.ParseAttributeArgumentList(argumentAttributeText));
+                }
+
+                attributeSyntaxes.Add(attributeSyntax);
+            }
+
+            if (!attributeSyntaxes.Any()) return propertyDeclarationSyntax;
+
+            var attributeList = SyntaxFactory.AttributeList(
+                    SyntaxFactory.SeparatedList<AttributeSyntax>(attributeSyntaxes));
+
+            return propertyDeclarationSyntax.WithAttributeLists(SyntaxFactory.SingletonList(attributeList));
         }
     }
 }

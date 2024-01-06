@@ -6,16 +6,17 @@ namespace WFDotnet.Code.Activity.Common.Models
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<WorkFlowActivity> Activities { get; set; }
+        public WorkFlowStep[] Steps { get; set; }
+
         public WorkFlow()
         {
-            Activities = new List<WorkFlowActivity>();
+            Steps = new WorkFlowStep[0];
         }
     }
 
-    public class WorkFlowActivity
+    public class WorkFlowStep
     {
         public IActivity Activity { get; set; }
-        public List<WorkFlowActivity> SubActivities { get; set; }
+        public WorkFlowStep[] Steps { get; set; }
     }
 }

@@ -1,23 +1,28 @@
-﻿using System.Diagnostics;
+﻿using WFDotnet.Code.Activity.Common.Attributes;
 using WFDotnet.Code.Activity.Common.Interfaces;
+using WFDotnet.Code.Activity.Common.Models;
 
 namespace WFDotnet.Code.Activity.Basic
 {
-    public class StartActivity : IStartActivity
+    public class StartActivity : IStartActivity, IConstructor
     {
-        public string Name => "start";
+        [ActivityInParameter("Arguments","","")]
+        public KeyValueItem[] Arguments { get; set; }
 
-        public Dictionary<string, string> Arguments { get; set; }
+        [ActivityInParameter("Name","","")]
+        public string Name { get; set; }
+
+        public StepResult Result { get; set; }
 
         public StartActivity()
         {
-            Arguments = new Dictionary<string, string>();
+            Name = "start";
+            Arguments = new KeyValueItem[0];
         }
 
         public Task OnExecute()
         {
-            if(Debugger.IsAttached)
-                Console.WriteLine("Start activity on executed");
+            Result = new StepSuccessResult();
 
             return Task.CompletedTask;
         }

@@ -2,7 +2,5 @@
 {
     public interface IEndActivity : IActivity
     {
-        string Name { get; }
-        object Result { get; set; }
     }
 }

@@ -1,18 +1,21 @@
-﻿using System.Diagnostics;
-using WFDotnet.Code.Activity.Common.Interfaces;
+﻿using WFDotnet.Code.Activity.Common.Interfaces;
+using WFDotnet.Code.Activity.Common.Models;
 
 namespace WFDotnet.Code.Activity.Basic
 {
     public class EndActivity : IEndActivity
     {
-        public string Name => "end";
+        public string Name { get; set; }
+        public StepResult Result { get; set; }
 
-        public object Result { get; set; } = null;
+        public EndActivity()
+        {
+            Name = "end";
+        }
 
         public Task OnExecute()
         {
-            if(Debugger.IsAttached)
-                Console.WriteLine("End activty on executed");
+            Result = new StepSuccessResult();
 
             return Task.CompletedTask;
         }

@@ -1,13 +1,12 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using WFDotnet.Code.Common.Constants;
-using WFDotnet.Code.DataModel;
+using WFDotnet.Code.Common.DataTypes.Interfaces;
+using WFDotnet.Code.Common.Extensions;
+using WFDotnet.Code.DataModel.Models;
 using WFDotnet.Code.Generation.Common;
 using WFDotnet.Code.Generation.Common.Models;
-using WFDotnet.Code.Generation.DataModel.Extensions;
 
 namespace WFDotnet.Code.Generation.DataModel
 {
@@ -26,12 +25,12 @@ namespace WFDotnet.Code.Generation.DataModel
 
                 foreach (var property in instance.Properties)
                 {
-                    if (!property.CanBeInstantiated() && !property.HasGenericType())
+                    if (!property.PropertyType.CanBeInstantiated() && !property.PropertyType.HasGenericType())
                         modelClass = modelClass.AddMembers(GenerateNotGenericPredifinedTypeCode(property));
                     else
                         modelClass = modelClass.AddMembers(GenericDefinedTypeCode(property));
 
-                    var propertyNamespace = property.Type.Namespace;
+                    var propertyNamespace = property.PropertyType.Namespace;
 
                     if (!defaultUsings.Any(f => f == propertyNamespace))
                         defaultUsings.Add(propertyNamespace);
@@ -58,9 +57,9 @@ namespace WFDotnet.Code.Generation.DataModel
             }
         }
 
-        private PropertyDeclarationSyntax GenerateNotGenericPredifinedTypeCode(ModelPropertyInfo modelPropertyInfo)
+        private PropertyDeclarationSyntax GenerateNotGenericPredifinedTypeCode(Property modelPropertyInfo)
         {
-            var propertySyntax = SyntaxFactory.PropertyDeclaration(SyntaxFactory.ParseTypeName(modelPropertyInfo.Type.GetFullName(false)), modelPropertyInfo.Name);
+            var propertySyntax = SyntaxFactory.PropertyDeclaration(SyntaxFactory.ParseTypeName(modelPropertyInfo.PropertyType.GetFullName(false)), modelPropertyInfo.Name);
             propertySyntax = propertySyntax.AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
             propertySyntax = propertySyntax.WithAccessorList(SyntaxFactory.AccessorList(
                     SyntaxFactory.List(new AccessorDeclarationSyntax[]
@@ -77,11 +76,11 @@ namespace WFDotnet.Code.Generation.DataModel
             return propertySyntax;
         }
 
-        private PropertyDeclarationSyntax GenericDefinedTypeCode(ModelPropertyInfo modelPropertyInfo)
+        private PropertyDeclarationSyntax GenericDefinedTypeCode(Property modelPropertyInfo)
         {
-            var hasGenericType = modelPropertyInfo.Type.GetGenericArguments().Any();
+            var hasGenericType = modelPropertyInfo.PropertyType.GetGenericArguments().Any();
 
-            var typeFullName = modelPropertyInfo.Type.GetFullName(hasGenericType);
+            var typeFullName = modelPropertyInfo.PropertyType.GetFullName(hasGenericType);
 
             var lastDotIndex = typeFullName.LastIndexOf('.');
 
@@ -92,7 +91,7 @@ namespace WFDotnet.Code.Generation.DataModel
                 .TrimStart('.');
 
 
-            List<SyntaxNodeOrToken> syntaxNodeOrTokens = GetSyntaxNodeOrTokens(modelPropertyInfo.Type);
+            List<SyntaxNodeOrToken> syntaxNodeOrTokens = GetSyntaxNodeOrTokens(modelPropertyInfo.PropertyType);
 
             var typeArgumentList = SyntaxFactory.TypeArgumentList(
                     SyntaxFactory.SeparatedList<TypeSyntax>(syntaxNodeOrTokens));
@@ -178,7 +177,7 @@ namespace WFDotnet.Code.Generation.DataModel
             return syntaxNodeOrTokens;
         }
 
-        private PropertyDeclarationSyntax PropertySyntaxAddAttributes(PropertyDeclarationSyntax propertyDeclarationSyntax, ModelPropertyInfo modelPropertyInfo)
+        private PropertyDeclarationSyntax PropertySyntaxAddAttributes(PropertyDeclarationSyntax propertyDeclarationSyntax, Property modelPropertyInfo)
         {
             if (!modelPropertyInfo.Attributes.Any()) return propertyDeclarationSyntax;
 
@@ -189,11 +188,9 @@ namespace WFDotnet.Code.Generation.DataModel
                 bool hasAttributeProperties = false;
                 string argumentAttributeText = "";
 
-                if (attributeInfo.Value != null)
+                if (attributeInfo.Values != null)
                 {
-                    var attributeProperties = attributeInfo.Value.GetType().GetProperties();
-
-                    foreach (var attributeProperty in attributeProperties)
+                    foreach (var attributeProperty in attributeInfo.Values)
                     {
                         if (!hasAttributeProperties)
                         {
@@ -201,14 +198,12 @@ namespace WFDotnet.Code.Generation.DataModel
                             argumentAttributeText += SyntaxFactory.Token(SyntaxKind.OpenParenToken).Text;
                         }
 
-                        var attrValue = attributeProperty.GetValue(attributeInfo.Value);
+                        var attributeValue = attributeProperty.Value;
 
-                        if (attributeProperty.PropertyType == typeof(string))
-                            argumentAttributeText += $"{attributeProperty.Name} = \"{attrValue}\" ,";
-                        else if(attributeProperty.PropertyType.IsEnum)
-                            argumentAttributeText += $"{attributeProperty.Name} = {attributeProperty.Name}.{attrValue} ,";
-                        else
-                            argumentAttributeText += $"{attributeProperty.Name} = {attrValue} ,";
+                        if (attributeProperty.TypeFinder is IAttributeValue readValue)
+                            attributeValue = readValue.GetAttributeValue(attributeValue);
+
+                        argumentAttributeText += $"{attributeProperty.Key} = {attributeValue} ,";
                     }
 
                     argumentAttributeText = argumentAttributeText.TrimEnd(SyntaxFactory.Token(SyntaxKind.CommaToken).Text[0]);
@@ -219,12 +214,12 @@ namespace WFDotnet.Code.Generation.DataModel
 
                 if (!hasAttributeProperties)
                 {
-                    attributeSyntax = SyntaxFactory.Attribute(SyntaxFactory.ParseName(attributeInfo.Type.FullName));
+                    attributeSyntax = SyntaxFactory.Attribute(SyntaxFactory.ParseName(attributeInfo.AttributeType.FullName));
                 }
                 else
                 {
                     attributeSyntax = SyntaxFactory.Attribute(
-                        SyntaxFactory.ParseName(attributeInfo.Type.FullName),
+                        SyntaxFactory.ParseName(attributeInfo.AttributeType.FullName),
                         SyntaxFactory.ParseAttributeArgumentList(argumentAttributeText));
                 }
 

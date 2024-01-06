@@ -21,8 +21,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WFDotnet.Code.Activity.Comm
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WFDotnet.Code.Activity.Basic", "src\WFDotnet.Code.Activity.Basic\WFDotnet.Code.Activity.Basic.csproj", "{5EB05528-035D-4193-A1E3-C60B61C02779}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WFDotnet.Code.Generation.Activity", "src\WFDotnet.Code.Generation.Activity\WFDotnet.Code.Generation.Activity.csproj", "{409E3E55-95F2-422E-9070-EFA84BF58CED}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,10 +55,6 @@ Global
 		{5EB05528-035D-4193-A1E3-C60B61C02779}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5EB05528-035D-4193-A1E3-C60B61C02779}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5EB05528-035D-4193-A1E3-C60B61C02779}.Release|Any CPU.Build.0 = Release|Any CPU
-		{409E3E55-95F2-422E-9070-EFA84BF58CED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{409E3E55-95F2-422E-9070-EFA84BF58CED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{409E3E55-95F2-422E-9070-EFA84BF58CED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{409E3E55-95F2-422E-9070-EFA84BF58CED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,7 +67,6 @@ Global
 		{C2F9BACE-A305-467C-ABBB-D0AB01725E8A} = {4F33BD0F-410A-42F9-B123-FF5B2F08FE13}
 		{14716425-7DE4-40B9-8AF7-5A81DE287660} = {463FDD13-67A7-4F5A-AECC-AF20CF1DCBC4}
 		{5EB05528-035D-4193-A1E3-C60B61C02779} = {463FDD13-67A7-4F5A-AECC-AF20CF1DCBC4}
-		{409E3E55-95F2-422E-9070-EFA84BF58CED} = {463FDD13-67A7-4F5A-AECC-AF20CF1DCBC4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2A4AF5D3-F8F9-4DF2-9D5A-AC244F25B0FA}

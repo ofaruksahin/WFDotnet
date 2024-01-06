@@ -8,8 +8,8 @@
         public string CategoryName { get; private set; }
 
         public ActivityAttribute(
-            string name, 
-            string description, 
+            string name,
+            string description,
             string categoryName)
         {
             Name = name;

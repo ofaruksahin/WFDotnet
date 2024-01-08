@@ -23,8 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\WFDotnet.Code.Activity.Basic\WFDotnet.Code.Activity.Basic.csproj" />
-    <ProjectReference Include="..\..\src\WFDotnet.Code.Activity.Common\WFDotnet.Code.Activity.Common.csproj" />
     <ProjectReference Include="..\..\src\WFDotnet.Code.Generation.DataModel\WFDotnet.Code.Generation.DataModel.csproj" />
   </ItemGroup>
 </Project>
